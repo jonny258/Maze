@@ -1,7 +1,3 @@
-<mazeSquare></mazeSquare>
-<mazeSquare></mazeSquare>
-<mazeSquare></mazeSquare>
-<mazeSquare></mazeSquare>
-<mazeSquare></mazeSquare>
-<mazeSquare></mazeSquare>
-<mazeSquare></mazeSquare>
+<div *ngFor="let yId of yIds" class="flex">
+  <mazeSquare *ngFor="let xId of xIds"></mazeSquare>
+</div>

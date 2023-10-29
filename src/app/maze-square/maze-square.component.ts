@@ -6,10 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./maze-square.component.css']
 })
 export class MazeSquareComponent {
-  boxElement = document.querySelectorAll('.box');
-
   mazeSquareClickHandler(){
-    const boxElements = document.querySelectorAll('.box');
-    console.log(Array.from(boxElements));
+    
   }
 }
