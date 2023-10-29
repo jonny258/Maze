@@ -1,3 +1,7 @@
 <div *ngFor="let yId of yIds" class="flex">
-  <mazeSquare *ngFor="let xId of xIds"></mazeSquare>
+  <mazeSquare
+    *ngFor="let xId of xIds"
+    [xId]="xId"
+    [yId]="yId"
+  ></mazeSquare>
 </div>
