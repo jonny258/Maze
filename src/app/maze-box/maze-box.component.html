@@ -1,7 +1,12 @@
 <div *ngFor="let yId of yIds" class="flex">
-  <mazeSquare
+  <div
     *ngFor="let xId of xIds"
-    [xId]="xId"
-    [yId]="yId"
-  ></mazeSquare>
+    (mouseover)="onSquareHover(yId, xId)"
+    (click)="changeArrayHandler(yId, xId)"
+    [ngClass]="
+      mazeArray[yId][xId]
+        ? 'bg-black w-10 h-10 border-[1px]'
+        : 'bg-white w-10 h-10 border-[1px]'
+    "
+  ></div>
 </div>
