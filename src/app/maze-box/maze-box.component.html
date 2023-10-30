@@ -1,4 +1,4 @@
-<div *ngFor="let yId of yIds" class="flex">
+<!-- <div *ngFor="let yId of yIds" class="flex">
   <div
     *ngFor="let xId of xIds"
     (mouseover)="onSquareHover(yId, xId)"
@@ -9,4 +9,23 @@
         : 'bg-white w-10 h-10 border-[1px]'
     "
   ></div>
+</div> -->
+
+<div class="grid grid-cols-12">
+  <div
+    *ngFor="let node of mazeGraph.nodes"
+    class="bg-white w-10 h-10 border-[1px]"
+    (click)="nodeClickHandler(node)"
+  >
+    {{ node.value }}
+  </div>
 </div>
+
+
+
+<button
+  (click)="testButtonHandler()"
+  class="p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95"
+>
+  TEST TEST
+</button>
