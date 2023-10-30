@@ -14,18 +14,17 @@
 <div class="grid grid-cols-12">
   <div
     *ngFor="let node of mazeGraph.nodes"
-    class="bg-white w-10 h-10 border-[1px]"
     (click)="nodeClickHandler(node)"
+    [ngClass]="{
+      'bg-blue-500': isNodeInShortestPath(node), 
+      'bg-black': node.isWall,
+      'bg-white': !node.isWall,
+      'w-10': true,
+      'h-10': true,
+      'border-[1px]': true
+    }"
   >
     {{ node.value }}
   </div>
 </div>
 
-
-
-<button
-  (click)="testButtonHandler()"
-  class="p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95"
->
-  TEST TEST
-</button>
