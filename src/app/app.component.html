@@ -18,7 +18,7 @@
         <p class="text-white w-[80%]">The algorithm first does a search.</p>
       </div>
       <div class="flex mt-4">
-        <mazeBox (mazeArrayChange)="onMazeArrayChange($event)"></mazeBox>
+        <mazeBox (mazeGraphChange)="setParimiterArray($event)" [shortestPath]="shortestPath"></mazeBox>
         <div class="h-[280px] pl-4 flex flex-col justify-between">
           <div></div>
           <button
