@@ -3,11 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { MazeBoxComponent } from './maze-box/maze-box.component';
+import { BinarysearchtreeComponent } from './binarysearchtree/binarysearchtree.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MazeBoxComponent
+    MazeBoxComponent,
+    BinarysearchtreeComponent,
   ],
   imports: [
     BrowserModule
