@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TreeNode } from "../../../helpers/treeNode";
+import { TreeNode, TreeComponent } from "../../../helpers/treeNode";
 
 @Component({
   selector: 'binarysearchtree',
@@ -15,9 +15,15 @@ export class BinarysearchtreeComponent {
   addNumberString: string = '';
   addNumberNumber: number = 0;
 
+// This mess is obviously not scalable or efficient, but only way I know hwo to do it for now
+
   rootNode: TreeNode;
   leftNode: TreeNode;
   rightNode: TreeNode;
+  leftChildOfLeftNode: TreeNode;
+  rightChildOfLeftNode: TreeNode;
+  leftChildOfRightNode: TreeNode;
+  rightChildOfRightNode: TreeNode;
 
   constructor() {
     this.rootNode = new TreeNode(20);
@@ -25,18 +31,31 @@ export class BinarysearchtreeComponent {
     this.rightNode = new TreeNode(30);
     this.rootNode.left = this.leftNode;
     this.rootNode.right = this.rightNode;
-    let leftChildOfLeftNode = new TreeNode(5);
-    let rightChildOfLeftNode = new TreeNode(15);
-    this.leftNode.left = leftChildOfLeftNode;
-    this.leftNode.right = rightChildOfLeftNode;
-    let leftChildOfRightNode = new TreeNode(25);
-    let rightChildOfRightNode = new TreeNode(35);
-    this.rightNode.left = leftChildOfRightNode;
-    this.rightNode.right = rightChildOfRightNode;
+    this.leftChildOfLeftNode = new TreeNode(5);
+    this.rightChildOfLeftNode = new TreeNode(15);
+    this.leftNode.left = this.leftChildOfLeftNode;
+    this.leftNode.right = this.rightChildOfLeftNode;
+    this.leftChildOfRightNode = new TreeNode(25);
+    this.rightChildOfRightNode = new TreeNode(35);
+    this.rightNode.left = this.leftChildOfRightNode;
+    this.rightNode.right = this.rightChildOfRightNode;
   }
 
   search(key: number): TreeNode | null {
+    this.setAllInactive(this.rootNode);
     return this.searchRecursively(this.rootNode, key);
+  }
+
+  setAllInactive(node: TreeNode | null) {
+    if (!node) return;
+    node.isActive = false;
+    this.setAllInactive(node.left);
+    this.setAllInactive(node.right);
+  }
+
+
+  activateNode(node: TreeNode) {
+    node.isActive = true;
   }
 
   private searchRecursively(node: TreeNode | null, key: number): TreeNode | null {
@@ -47,13 +66,17 @@ export class BinarysearchtreeComponent {
     console.log("Current node key:", node.key);
     if (key === node.key) {
       console.log("Key matches current node key!");
+      this.activateNode(node)
+      console.log(node)
       return node;
     }
     if (key < node.key) {
       console.log("Key is smaller than current node key. Moving to the left child...");
+      this.activateNode(node)
       return this.searchRecursively(node.left, key);
     } else {
       console.log("Key is larger than current node key. Moving to the right child...");
+      this.activateNode(node)
       return this.searchRecursively(node.right, key);
     }
   }
