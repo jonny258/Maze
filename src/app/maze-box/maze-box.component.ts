@@ -67,11 +67,24 @@ export class MazeBoxComponent implements OnInit {
     maze: Graph;
   }>();
   @Input() shortestPath?: ListNode[];
+  @Input() explorePath?: ListNode[];
+  @Input() currentNode?: ListNode;
 
   // isMouseDown: boolean = false;
 
   isNodeInShortestPath(node: ListNode): boolean {
-    return this.shortestPath ? this.shortestPath.includes(node) : false;
+    return this.shortestPath
+      ? this.shortestPath.some((pathNode) => pathNode.value === node.value)
+      : false;
+  }
+  isNodeInExplorePath(node: ListNode): boolean {
+    return this.explorePath
+      ? this.explorePath.some((pathNode) => pathNode.value === node.value)
+      : false;
+  }
+  isNodeTheCurrentExploreNode(node: ListNode): boolean {
+    const isCurrent = node === this.currentNode;
+    return isCurrent;
   }
 
   mazeGraph = new Graph();
@@ -136,47 +149,11 @@ export class MazeBoxComponent implements OnInit {
     }
   }
 
-  // mazeArray = Array(12)
-  //   .fill(null)
-  //   .map((_, rowIndex) =>
-  //     Array(12)
-  //       .fill(null)
-  //       .map(
-  //         (_, colIndex) =>
-  //           rowIndex === 0 ||
-  //           rowIndex === 11 ||
-  //           colIndex === 0 ||
-  //           colIndex === 11
-  //       )
-  //   );
-
-  // @HostListener('document:mousedown')
-  // onMouseDown() {
-  //   this.isMouseDown = true;
-  // }
-
-  // @HostListener('document:mouseup')
-  // onMouseUp() {
-  //   this.isMouseDown = false;
-  // }
-
-  // onSquareHover(y: number, x: number) {
-  //   if (this.isMouseDown) {
-  //     this.changeArrayHandler(y, x);
-  //   }
-  // }
-
-  // changeArrayHandler(y: number, x: number) {
-  //   this.mazeArray[y][x] = !this.mazeArray[y][x];
-  //   this.mazeArrayChange.emit(this.mazeArray);
-  // }
-
-  //
-  //
-  //
-
   nodeClickHandler(node: ListNode) {
-    this.shortestPath = []
+    this.shortestPath = [];
+    this.currentNode = new ListNode(-1)
+    this.explorePath = [];
+    console.log(this.shortestPath);
     node.isWall = !node.isWall;
     if (node.isWall) {
       this.removeAllNodeNeighbors(node);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
 
 class ListNode {
   value: number;
@@ -63,30 +63,37 @@ export class AppComponent {
   perimeterArray: ListNode[] = [];
   mazeGraph: Graph = new Graph();
 
+  constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
+
   setParimiterArray(event: { perimeter: ListNode[]; maze: Graph }) {
     this.perimeterArray = event.perimeter;
     this.mazeGraph = event.maze;
   }
 
-  shortestPath: ListNode[] = [];  
+  shortestPath: ListNode[] = [];
+  explorePath: ListNode[] = [];
+  currentNode: ListNode = new ListNode(-1);
 
-  solveGraph(startNode: ListNode, endNode: ListNode) {
+  //This function is not in use
+  solveGraphRecursive(startNode: ListNode, endNode: ListNode) {
     console.log('RUNNING DFS');
     const isVisitedArray = Array(144).fill(false);
-    let allPaths: ListNode[][] = [];
+    let allPathsCount: number = 0;
     this.shortestPath = [];
 
     const dfs = (node: ListNode, currentPath: ListNode[]) => {
-      
-      currentPath.push(node)
+      currentPath.push(node);
       if (node === endNode) {
-        allPaths.push([...currentPath])
-        if(this.shortestPath.length === 0 || currentPath.length < this.shortestPath.length){
-          this.shortestPath = [...currentPath]
+        allPathsCount++;
+        if (
+          this.shortestPath.length === 0 ||
+          currentPath.length < this.shortestPath.length
+        ) {
+          this.shortestPath = [...currentPath];
         }
-      }else{
+      } else {
         isVisitedArray[node.value] = true;
-        node.neighbors.forEach(neighborNode => {
+        node.neighbors.forEach((neighborNode) => {
           if (!isVisitedArray[neighborNode.value]) {
             dfs(neighborNode, currentPath);
           }
@@ -99,11 +106,102 @@ export class AppComponent {
 
     dfs(startNode, []);
 
-    console.log("All paths:", allPaths);
-    console.log("Shortest path:", this.shortestPath);
+    console.log('Number of paths:', allPathsCount);
+    console.log('Shortest path:', this.shortestPath);
   }
 
-  runCodeHandler() {
+  solveGraphBFS(startNode: ListNode) {
+    let queue: ListNode[] = [startNode];
+    let path: ListNode[] = [];
+    const isVisitedArray = Array(144).fill(false);
+
+    isVisitedArray[startNode.value] = true;
+
+    while (queue.length > 0) {
+      let dequeuedNode = queue.shift()!;
+      isVisitedArray[dequeuedNode.value] = true;
+
+      path.push(dequeuedNode);
+      dequeuedNode.neighbors.forEach((neighborNode) => {
+        if (!isVisitedArray[neighborNode.value]) {
+          isVisitedArray[neighborNode.value] = true;
+          queue.push(neighborNode);
+        }
+      });
+    }
+    this.showHowGraphExplores(path);
+  }
+
+  shortestPathBFS(startNode: ListNode, endNode: ListNode) {
+    console.log("Running BFS")
+    let queue: Array<{ node: ListNode; path: ListNode[] }> = [
+      { node: startNode, path: [startNode] },
+    ];
+    const isVisitedArray = Array(144).fill(false);
+    isVisitedArray[startNode.value] = true;
+
+    while (queue.length > 0) {
+      let shifted = queue.shift();
+      if(shifted){
+        let { node, path } = shifted;
+        isVisitedArray[node.value] = true;
+        if(node === endNode){
+          console.log(path)
+          return this.shortestPath = [...path]
+        }
+        node.neighbors.forEach(neighborNode => {
+          isVisitedArray[neighborNode.value] = true;
+          queue.push({node: neighborNode, path: [...path, neighborNode]})
+        })
+      }
+    }
+    return 
+  }
+
+  showHowGraphExplores(path: ListNode[]) {
+    let temp: ListNode[] = [];
+    path.forEach((node, index) => {
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.currentNode = node;
+          temp.push(node);
+          this.explorePath = [...temp];
+          // If using ChangeDetectorRef
+          this.cdRef.detectChanges();
+        });
+      }, index * 200);
+    });
+  }
+
+  solveGraphStack(startNode: ListNode) {
+    let stack = [startNode];
+    let path: ListNode[] = [];
+    const isVisitedArray = Array(144).fill(false);
+    console.log(startNode);
+
+    while (stack.length > 0) {
+      let current = stack.pop();
+      if (current) {
+        path.push(current);
+      }
+
+      if (current !== undefined && !isVisitedArray[current.value]) {
+        isVisitedArray[current.value] = true;
+        let neighbors = this.mazeGraph.findNode(current.value)?.neighbors;
+
+        if (neighbors) {
+          for (let i = 0; i < neighbors.length; i++) {
+            if (!isVisitedArray[neighbors[i].value]) {
+              stack.push(neighbors[i]);
+            }
+          }
+        }
+      }
+    }
+    this.showHowGraphExplores(path);
+  }
+
+  runCodeHandler(type: string) {
     let notWallOrCornerArray = [];
 
     for (let i = 0; i < this.perimeterArray.length; i++) {
@@ -129,7 +227,21 @@ export class AppComponent {
       );
     } else if (notWallOrCornerArray.length === 2) {
       // console.log(notWallOrCornerArray);
-      this.solveGraph(notWallOrCornerArray[0], notWallOrCornerArray[1]);
+      // if (type === 'DFS Recursive') {
+      //   this.solveGraphRecursive(
+      //     notWallOrCornerArray[0],
+      //     notWallOrCornerArray[1]
+      //   );
+      // }
+      if(type === 'BFS shortestPath'){
+        this.shortestPathBFS(notWallOrCornerArray[0], notWallOrCornerArray[1])
+      }
+      if (type === 'DFS Stack') {
+        this.solveGraphStack(notWallOrCornerArray[0]);
+      }
+      if (type === 'BFS') {
+        this.solveGraphBFS(notWallOrCornerArray[0]);
+      }
     }
     // console.log(this.mazeArray);
 
