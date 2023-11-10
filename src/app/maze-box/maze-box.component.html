@@ -16,9 +16,11 @@
     *ngFor="let node of mazeGraph.nodes"
     (click)="nodeClickHandler(node)"
     [ngClass]="{
-      'bg-blue-500': isNodeInShortestPath(node), 
       'bg-black': node.isWall,
-      'bg-white': !node.isWall,
+      'bg-white': !node.isWall && !isNodeInShortestPath(node) && !isNodeInExplorePath(node),
+      'bg-blue-500': isNodeInShortestPath(node) && !node.isWall,
+      'bg-gray-500': isNodeInExplorePath(node) && !node.isWall,
+      'bg-yellow-500': isNodeTheCurrentExploreNode(node) && !node.isWall,
       'w-10': true,
       'h-10': true,
       'border-[1px]': true
@@ -28,3 +30,14 @@
   </div>
 </div>
 
+
+<!--     [ngClass]="{
+      'bg-blue-500': isNodeInShortestPath(node) && !node.isWall,
+      'bg-gray-500': isNodeInExplorePath(node) && !node.isWall,
+      'bg-yellow-500': isNodeTheCurrentExploreNode(node) && !node.isWall,
+      'bg-black': node.isWall,
+      'bg-white': !node.isWall && !isNodeInShortestPath(node) && !isNodeTheCurrentExploreNode(node),
+      'w-10': true,
+      'h-10': true,
+      'border-[1px]': true
+    }" -->

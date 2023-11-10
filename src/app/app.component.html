@@ -6,7 +6,7 @@
   </div>
   <div class="w-full h-full grid grid-cols-6 gap-6 pt-32 pl-10 pr-10">
     <div class="xl:col-span-2 sm:col-span-6 p-2">
-      <h1 class="text-xl text-white mb-4 font-semibold">Depth vs Search</h1>
+      <h1 class="text-xl text-white mb-4 font-semibold">Search a Maze</h1>
       <div>
         <h2 class="text-md text-white">Instructions:</h2>
         <p class="text-white w-[80%]">
@@ -18,27 +18,51 @@
         <p class="text-white w-[80%]">The algorithm first does a search.</p>
       </div>
       <div class="flex mt-4">
-        <mazeBox (mazeGraphChange)="setParimiterArray($event)" [shortestPath]="shortestPath"></mazeBox>
+        <mazeBox
+          (mazeGraphChange)="setParimiterArray($event)"
+          [shortestPath]="shortestPath"
+          [explorePath]="explorePath"
+          [currentNode]="currentNode"
+        ></mazeBox>
         <div class="h-[280px] pl-4 flex flex-col justify-between">
           <div></div>
+          <!-- <button
+            class="p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95"
+            (click)="runCodeHandler('DFS Recursive')"
+          >
+            Run Code DFS Recursive
+          </button> -->
           <button
             class="p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95"
-            (click)="runCodeHandler()"
+            (click)="runCodeHandler('BFS shortestPath')"
           >
-            Run Code
+            Find Shortest Path using BFS
+          </button>
+          <button
+            class="p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95"
+            (click)="runCodeHandler('DFS Stack')"
+          >
+            Explore the graph using DFS
+          </button>
+          <button
+            class="p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95"
+            (click)="runCodeHandler('BFS')"
+          >
+            Explore the graph using BFS
           </button>
         </div>
       </div>
     </div>
     <div class="col-span-1"></div>
     <div class="col-span-2 p-2">
-      <h1 class="text-xl text-white mb-4 font-semibold">
-        Binary Search Tree
-      </h1>
+      <h1 class="text-xl text-white mb-4 font-semibold">Binary Search Tree</h1>
       <div>
         <h2 class="text-md text-white">The plan</h2>
         <p class="text-white w-[80%]">
-          Will have 3 functions: <br> 1. Add a number to the tree (insert function) <br> 2. Search the tree (search function) <br> 3. Delete node from tree
+          Will have 3 functions: <br />
+          1. Add a number to the tree (insert function) <br />
+          2. Search the tree (search function) <br />
+          3. Delete node from tree
         </p>
         <h2 class="text-md text-white mt-4">Explanation:</h2>
         <p class="text-white">Animate Search Process</p>
