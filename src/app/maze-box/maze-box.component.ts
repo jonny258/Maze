@@ -7,8 +7,6 @@ import { Graph, ListNode } from '../graphClass';
   styleUrls: ['./maze-box.component.css'],
 })
 export class MazeBoxComponent implements OnInit {
-  // yIds: number[] = [];
-  // xIds: number[] = [];
 
   @Output() mazeGraphChange = new EventEmitter<{
     perimeter: ListNode[];
@@ -18,8 +16,13 @@ export class MazeBoxComponent implements OnInit {
   @Input() explorePath?: ListNode[];
   @Input() currentNode?: ListNode;
 
-  // isMouseDown: boolean = false;
 
+
+
+
+
+
+  //SET STYLES
   isNodeInShortestPath(node: ListNode): boolean {
     return this.shortestPath
       ? this.shortestPath.some((pathNode) => pathNode.value === node.value)
@@ -71,12 +74,7 @@ export class MazeBoxComponent implements OnInit {
 
   perimeterArray: ListNode[] = [];
 
-  ngOnInit() {
-    // for (let i = 0; i <= 11; i++) {
-    //   this.yIds.push(i);
-    //   this.xIds.push(i);
-    // }
-
+  setUpMaze(){
     for (let i = 0; i < 144; i++) {
       this.mazeGraph.addNode(i);
     }
@@ -97,10 +95,52 @@ export class MazeBoxComponent implements OnInit {
     }
   }
 
+  ngOnInit() {
+    this.setUpMaze()   
+  }
+
+
+  drawMode = false;
+  eraseMode = false;
+  drawHandler() {
+    this.eraseMode = false;
+    this.drawMode = true;
+  }
+
+  eraseHandler() {
+    this.drawMode = false;
+    this.eraseMode = true;
+  }
+
+  resetHandler() {
+    this.drawMode = false;
+    this.eraseMode = false;
+    this.mazeGraph = new Graph;
+    this.setUpMaze()  
+  }
+
+  hoverHandler(node: ListNode){
+    console.log(node)
+    console.log(this.drawMode)
+    if(this.drawMode){
+      node.isWall = true
+      this.removeAllNodeNeighbors(node);
+    }
+    if(this.eraseMode){
+      node.isWall = false
+      this.addAllNodeNeighbors(node);
+      node.neighbors.forEach((nodeNeighbor) => {
+        nodeNeighbor.addNeighbor(node);
+      });
+    }
+  }
+
   nodeClickHandler(node: ListNode) {
     this.shortestPath = [];
     this.currentNode = new ListNode(-1)
     this.explorePath = [];
+    this.drawMode = false;
+    this.eraseMode = false;
     console.log(this.shortestPath);
     node.isWall = !node.isWall;
     if (node.isWall) {
