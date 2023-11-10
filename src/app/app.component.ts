@@ -1,57 +1,5 @@
 import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
-
-class ListNode {
-  value: number;
-  neighbors: ListNode[];
-  isWall: boolean;
-
-  constructor(value: number) {
-    this.value = value;
-    this.neighbors = [];
-    this.isWall = false;
-  }
-
-  addNeighbor(node: ListNode): void {
-    this.neighbors.push(node);
-  }
-
-  removeNeighbors(node: ListNode): void {
-    this.neighbors = this.neighbors.filter((neighborNode) => {
-      return neighborNode !== node;
-    });
-  }
-}
-
-class Graph {
-  nodes: ListNode[];
-
-  constructor() {
-    this.nodes = [];
-  }
-
-  addNode(value: number): ListNode {
-    const newNode = new ListNode(value);
-    this.nodes.push(newNode);
-    return newNode;
-  }
-
-  findNode(value: number): ListNode | undefined {
-    return this.nodes.find((node) => node.value === value);
-  }
-
-  addEdge(value1: number, value2: number): void {
-    const node1 = this.findNode(value1);
-    const node2 = this.findNode(value2);
-
-    if (!node1 || !node2) {
-      console.error('One or both nodes not found.');
-      return;
-    }
-
-    node1.addNeighbor(node2);
-    node2.addNeighbor(node1);
-  }
-}
+import { Graph, ListNode } from './graphClass';
 
 @Component({
   selector: 'app-root',
@@ -62,6 +10,7 @@ export class AppComponent {
   title = 'maze';
   perimeterArray: ListNode[] = [];
   mazeGraph: Graph = new Graph();
+  private timeoutIds: number[] = [];
 
   constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
 
@@ -70,145 +19,7 @@ export class AppComponent {
     this.mazeGraph = event.maze;
   }
 
-  shortestPath: ListNode[] = [];
-  explorePath: ListNode[] = [];
-  currentNode: ListNode = new ListNode(-1);
-
-  //This function is not in use
-  solveGraphRecursive(startNode: ListNode, endNode: ListNode) {
-    console.log('RUNNING DFS');
-    const isVisitedArray = Array(144).fill(false);
-    let allPathsCount: number = 0;
-    this.shortestPath = [];
-
-    const dfs = (node: ListNode, currentPath: ListNode[]) => {
-      currentPath.push(node);
-      if (node === endNode) {
-        allPathsCount++;
-        if (
-          this.shortestPath.length === 0 ||
-          currentPath.length < this.shortestPath.length
-        ) {
-          this.shortestPath = [...currentPath];
-        }
-      } else {
-        isVisitedArray[node.value] = true;
-        node.neighbors.forEach((neighborNode) => {
-          if (!isVisitedArray[neighborNode.value]) {
-            dfs(neighborNode, currentPath);
-          }
-        });
-        isVisitedArray[node.value] = false;
-      }
-
-      currentPath.pop();
-    };
-
-    dfs(startNode, []);
-
-    console.log('Number of paths:', allPathsCount);
-    console.log('Shortest path:', this.shortestPath);
-  }
-
-  solveGraphBFS(startNode: ListNode) {
-    let queue: ListNode[] = [startNode];
-    let path: ListNode[] = [];
-    const isVisitedArray = Array(144).fill(false);
-
-    isVisitedArray[startNode.value] = true;
-
-    while (queue.length > 0) {
-      let dequeuedNode = queue.shift()!;
-      isVisitedArray[dequeuedNode.value] = true;
-
-      path.push(dequeuedNode);
-      dequeuedNode.neighbors.forEach((neighborNode) => {
-        if (!isVisitedArray[neighborNode.value]) {
-          isVisitedArray[neighborNode.value] = true;
-          queue.push(neighborNode);
-        }
-      });
-    }
-    this.showHowGraphExplores(path);
-  }
-
-  shortestPathBFS(startNode: ListNode, endNode: ListNode) {
-    console.log("Running BFS")
-    let queue: Array<{ node: ListNode; path: ListNode[] }> = [
-      { node: startNode, path: [startNode] },
-    ];
-    const isVisitedArray = Array(144).fill(false);
-    isVisitedArray[startNode.value] = true;
-
-    while (queue.length > 0) {
-      let shifted = queue.shift();
-      console.log(shifted)
-      if(shifted){
-        let { node, path } = shifted;
-        isVisitedArray[node.value] = true;
-        if(node === endNode){
-          console.log(path)
-          return this.shortestPath = [...path]
-        }
-        node.neighbors.forEach(neighborNode => {
-          if(!isVisitedArray[neighborNode.value]){
-            isVisitedArray[neighborNode.value] = true;
-            console.log(neighborNode)
-            queue.push({node: neighborNode, path: [...path, neighborNode]})
-          }
-        })
-      }
-    }
-    return 
-  }
-
-  showHowGraphExplores(path: ListNode[]) {
-    ///let temp: ListNode[] = [];
-    this.explorePath = []
-    path.forEach((node, index) => {
-      setTimeout(() => {
-        this.ngZone.run(() => {
-          this.currentNode = node;
-          //temp.push(node);
-          this.explorePath = [...this.explorePath, node];
-          // console.log(this.explorePath)
-          // If using ChangeDetectorRef
-          this.cdRef.detectChanges();
-        });
-      }, index * 200);
-    });
-  }
-
-  solveGraphStack(startNode: ListNode) {
-    let stack = [startNode];
-    let path: ListNode[] = [];
-    const isVisitedArray = Array(144).fill(false);
-    console.log(startNode);
-
-    while (stack.length > 0) {
-      let current = stack.pop();
-      if (current) {
-        path.push(current);
-      }
-
-      if (current !== undefined && !isVisitedArray[current.value]) {
-        isVisitedArray[current.value] = true;
-        let neighbors = this.mazeGraph.findNode(current.value)?.neighbors;
-
-        if (neighbors) {
-          for (let i = 0; i < neighbors.length; i++) {
-            if (!isVisitedArray[neighbors[i].value]) {
-              stack.push(neighbors[i]);
-            }
-          }
-        }
-      }
-    }
-    this.showHowGraphExplores(path);
-  }
-
-  runCodeHandler(type: string) {
-    this.shortestPath = []
+  findParimeterHoles() {
     let notWallOrCornerArray = [];
 
     for (let i = 0; i < this.perimeterArray.length; i++) {
@@ -224,57 +35,136 @@ export class AppComponent {
       }
     }
 
-    if (notWallOrCornerArray.length > 2) {
-      alert(
-        'Please select 2 points on the perimeter not including corners for an entrence and an exit'
-      );
-    } else if (notWallOrCornerArray.length < 2) {
-      alert(
-        'Please select only 2 points on the perimeter not including corners for an entrence and an exit'
-      );
-    } else if (notWallOrCornerArray.length === 2) {
-      // console.log(notWallOrCornerArray);
-      // if (type === 'DFS Recursive') {
-      //   this.solveGraphRecursive(
-      //     notWallOrCornerArray[0],
-      //     notWallOrCornerArray[1]
-      //   );
-      // }
-      if(type === 'BFS shortestPath'){
-        this.shortestPathBFS(notWallOrCornerArray[0], notWallOrCornerArray[1])
-      }
-      if (type === 'DFS Stack') {
-        this.solveGraphStack(notWallOrCornerArray[0]);
-      }
-      if (type === 'BFS') {
-        this.solveGraphBFS(notWallOrCornerArray[0]);
-      }
-    }
-    // console.log(this.mazeArray);
-
-    // let count = 0;
-    // for (let i = 1; i < this.mazeArray[0].length - 1; i++) {
-    //   if (!this.mazeArray[0][i]) {
-    //     count++;
-    //   }
-    //   if (!this.mazeArray[this.mazeArray.length - 1][i]) {
-    //     count++;
-    //   }
-    // }
-
-    // for (let i = 1; i < this.mazeArray.length - 1; i++) {
-    //   if (!this.mazeArray[i][0]) {
-    //     count++;
-    //   }
-    //   if (!this.mazeArray[i][this.mazeArray[i].length - 1]) {
-    //     count++;
-    //   }
-    // }
-
-    // if(count !== 2){
-    //   alert("Please have 2 spaces on the perimeter")
-    // }
-
-    // return count;
+    return notWallOrCornerArray;
   }
+
+  shortestPath: ListNode[] = [];
+  explorePath: ListNode[] = [];
+  currentNode: ListNode = new ListNode(-1);
+
+  solveGraphDFS() {
+    this.clearAll();
+    let parimerterHoles = this.findParimeterHoles();
+    if (parimerterHoles.length > 0) {
+      let startNode = parimerterHoles[0];
+      let path: ListNode[] = [];
+      const isVisitedArray = Array(144).fill(false);
+      console.log(startNode);
+
+      const dfs = (node: ListNode) => {
+        if (!isVisitedArray[node.value]) {
+          isVisitedArray[node.value] = true;
+          path.push(node);
+          node.neighbors.forEach((neighborNode) => {
+            if (!isVisitedArray[neighborNode.value]) {
+              dfs(neighborNode);
+            }
+          });
+        }
+      };
+
+      dfs(startNode);
+      this.showHowGraphExplores(path);
+    } else {
+      alert('Please select an opening to start at');
+    }
+  }
+
+  solveGraphBFS() {
+    this.clearAll();
+    let parimerterHoles = this.findParimeterHoles();
+    if (parimerterHoles.length > 0) {
+      let startNode = parimerterHoles[0];
+      let queue: ListNode[] = [startNode];
+      let path: ListNode[] = [];
+      const isVisitedArray = Array(144).fill(false);
+
+      isVisitedArray[startNode.value] = true;
+
+      while (queue.length > 0) {
+        let dequeuedNode = queue.shift()!;
+        isVisitedArray[dequeuedNode.value] = true;
+
+        path.push(dequeuedNode);
+        dequeuedNode.neighbors.forEach((neighborNode) => {
+          if (!isVisitedArray[neighborNode.value]) {
+            isVisitedArray[neighborNode.value] = true;
+            queue.push(neighborNode);
+          }
+        });
+      }
+      this.showHowGraphExplores(path);
+    } else {
+      alert('Please select an opening to start at');
+    }
+  }
+
+  shortestPathBFS() {
+    this.clearAll();
+    let parimerterHoles = this.findParimeterHoles();
+    if (parimerterHoles.length === 2) {
+      let startNode = parimerterHoles[0];
+      let endNode = parimerterHoles[1];
+      console.log('Running BFS');
+      let queue: Array<{ node: ListNode; path: ListNode[] }> = [
+        { node: startNode, path: [startNode] },
+      ];
+      const isVisitedArray = Array(144).fill(false);
+      isVisitedArray[startNode.value] = true;
+
+      while (queue.length > 0) {
+        let shifted = queue.shift();
+        console.log(shifted);
+        if (shifted) {
+          let { node, path } = shifted;
+          isVisitedArray[node.value] = true;
+          if (node === endNode) {
+            console.log(path);
+            return (this.shortestPath = [...path]);
+          }
+          node.neighbors.forEach((neighborNode) => {
+            if (!isVisitedArray[neighborNode.value]) {
+              isVisitedArray[neighborNode.value] = true;
+              console.log(neighborNode);
+              queue.push({ node: neighborNode, path: [...path, neighborNode] });
+            }
+          });
+        }
+      }
+      return;
+    } else {
+      alert('Please select exactly 2 holes on the parimeter');
+    }
+    return;
+  }
+
+  showHowGraphExplores(path: ListNode[]) {
+    this.explorePath = [];
+    path.forEach((node, index) => {
+      const timeoutId = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.currentNode = node;
+          this.explorePath = [...this.explorePath, node];
+          this.cdRef.detectChanges();
+        });
+      }, index * 100) as unknown as number;
+
+      this.timeoutIds.push(timeoutId);
+    });
+  }
+
+  private clearTimeouts() {
+    this.timeoutIds.forEach(clearTimeout); // Clear each timeout
+    this.timeoutIds = []; // Reset the timeout IDs array
+  }
+
+  clearAll() {
+    this.shortestPath = [];
+    this.explorePath = [];
+    this.currentNode = new ListNode(-1);
+    this.clearTimeouts();
+  }
+
+
+
 }

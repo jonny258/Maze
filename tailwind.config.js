@@ -20,6 +20,9 @@ module.exports = {
         darkestBaseWhite: '#D1CBCE',
         lightModeGray: '#8F8E93 '
       },
+      gridTemplateColumns: {
+        '20': 'repeat(20, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],
