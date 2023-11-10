@@ -142,6 +142,7 @@ export class AppComponent {
 
     while (queue.length > 0) {
       let shifted = queue.shift();
+      console.log(shifted)
       if(shifted){
         let { node, path } = shifted;
         isVisitedArray[node.value] = true;
@@ -150,8 +151,11 @@ export class AppComponent {
           return this.shortestPath = [...path]
         }
         node.neighbors.forEach(neighborNode => {
-          isVisitedArray[neighborNode.value] = true;
-          queue.push({node: neighborNode, path: [...path, neighborNode]})
+          if(!isVisitedArray[neighborNode.value]){
+            isVisitedArray[neighborNode.value] = true;
+            console.log(neighborNode)
+            queue.push({node: neighborNode, path: [...path, neighborNode]})
+          }
         })
       }
     }
@@ -159,13 +163,15 @@ export class AppComponent {
   }
 
   showHowGraphExplores(path: ListNode[]) {
-    let temp: ListNode[] = [];
+    ///let temp: ListNode[] = [];
+    this.explorePath = []
     path.forEach((node, index) => {
       setTimeout(() => {
         this.ngZone.run(() => {
           this.currentNode = node;
-          temp.push(node);
-          this.explorePath = [...temp];
+          //temp.push(node);
+          this.explorePath = [...this.explorePath, node];
+          // console.log(this.explorePath)
           // If using ChangeDetectorRef
           this.cdRef.detectChanges();
         });
@@ -202,6 +208,7 @@ export class AppComponent {
   }
 
   runCodeHandler(type: string) {
+    this.shortestPath = []
     let notWallOrCornerArray = [];
 
     for (let i = 0; i < this.perimeterArray.length; i++) {
