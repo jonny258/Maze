@@ -1,16 +1,3 @@
-<!-- <div *ngFor="let yId of yIds" class="flex">
-  <div
-    *ngFor="let xId of xIds"
-    (mouseover)="onSquareHover(yId, xId)"
-    (click)="changeArrayHandler(yId, xId)"
-    [ngClass]="
-      mazeArray[yId][xId]
-        ? 'bg-black w-10 h-10 border-[1px]'
-        : 'bg-white w-10 h-10 border-[1px]'
-    "
-  ></div>
-</div> -->
-
 <div class="grid grid-cols-12">
   <div
     *ngFor="let node of mazeGraph.nodes"
@@ -29,15 +16,3 @@
     {{ node.value }}
   </div>
 </div>
-
-
-<!--     [ngClass]="{
-      'bg-blue-500': isNodeInShortestPath(node) && !node.isWall,
-      'bg-gray-500': isNodeInExplorePath(node) && !node.isWall,
-      'bg-yellow-500': isNodeTheCurrentExploreNode(node) && !node.isWall,
-      'bg-black': node.isWall,
-      'bg-white': !node.isWall && !isNodeInShortestPath(node) && !isNodeTheCurrentExploreNode(node),
-      'w-10': true,
-      'h-10': true,
-      'border-[1px]': true
-    }" -->
