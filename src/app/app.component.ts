@@ -147,7 +147,7 @@ export class AppComponent {
           this.explorePath = [...this.explorePath, node];
           this.cdRef.detectChanges();
         });
-      }, index * 200) as unknown as number;
+      }, index * 100) as unknown as number;
 
       this.timeoutIds.push(timeoutId);
     });

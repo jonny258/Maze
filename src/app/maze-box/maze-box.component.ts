@@ -43,25 +43,25 @@ export class MazeBoxComponent implements OnInit {
   addAllNodeNeighbors(node: ListNode) {
     //RIGHT
     if (
-      (node.value + 1) % 12 !== 0 &&
+      (node.value + 1) % 20 !== 0 &&
       !this.mazeGraph.nodes[node.value + 1].isWall
     ) {
       node.addNeighbor(this.mazeGraph.nodes[node.value + 1]);
     }
     //LEFT
-    if (node.value % 12 !== 0 && !this.mazeGraph.nodes[node.value - 1].isWall) {
+    if (node.value % 20 !== 0 && !this.mazeGraph.nodes[node.value - 1].isWall) {
       node.addNeighbor(this.mazeGraph.nodes[node.value - 1]);
     }
     //BOTTOM
     if (
-      node.value + 12 < 144 &&
-      !this.mazeGraph.nodes[node.value + 12].isWall
+      node.value + 20 < 400 &&
+      !this.mazeGraph.nodes[node.value + 20].isWall
     ) {
-      node.addNeighbor(this.mazeGraph.nodes[node.value + 12]);
+      node.addNeighbor(this.mazeGraph.nodes[node.value + 20]);
     }
     //TOP
-    if (node.value - 12 >= 0 && !this.mazeGraph.nodes[node.value - 12].isWall) {
-      node.addNeighbor(this.mazeGraph.nodes[node.value - 12]);
+    if (node.value - 20 >= 0 && !this.mazeGraph.nodes[node.value - 20].isWall) {
+      node.addNeighbor(this.mazeGraph.nodes[node.value - 20]);
     }
   }
 
@@ -75,7 +75,7 @@ export class MazeBoxComponent implements OnInit {
   perimeterArray: ListNode[] = [];
 
   setUpMaze(){
-    for (let i = 0; i < 144; i++) {
+    for (let i = 0; i < 400; i++) {
       this.mazeGraph.addNode(i);
     }
 
