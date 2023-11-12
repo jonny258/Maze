@@ -30,7 +30,8 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "baseHref": "/Algo-deploy/"
           },
           "configurations": {
             "production": {
