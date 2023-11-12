@@ -13,7 +13,7 @@ export class SortingVisualizerComponent {
     }
   }
 
-  barArray = Array.from({ length: 30 }, (_, i) => i + 1);
+  barArray = Array.from({ length: 100 }, (_, i) => i + 1);
 
   ngOnInit() {
     this.shuffleArray(this.barArray);
@@ -23,58 +23,112 @@ export class SortingVisualizerComponent {
     this.shuffleArray(this.barArray);
   }
 
-  mergeSortArray() {
-    const delay = 100;
-    let iteration = 0;
-    let totalMerges = 0;
+  visualizeSort(stepArray: any) {
+    stepArray.forEach((step: any, index: number) => {
+      setTimeout(() => {
+        this.barArray = step.fullArray;
+      }, 20 * index);
+    });
+  }
 
-    const merge = (leftArr: number[], rightArr: number[], start: number) => {
-        const sortedArr: number[] = [];
-        let leftIndex = 0, rightIndex = 0;
-        totalMerges++;
+  mergeSortVisualized(arr: number[]): any[] {
+    const steps: any[] = [];
+    const auxArray = [...arr];
 
-        const executeMerge = () => {
-            if (leftIndex < leftArr.length && rightIndex < rightArr.length) {
-                if (leftArr[leftIndex] <= rightArr[rightIndex]) {
-                    sortedArr.push(leftArr[leftIndex++]);
-                } else {
-                    sortedArr.push(rightArr[rightIndex++]);
-                }
+    function merge(
+      left: number[],
+      right: number[],
+      leftStart: number,
+      rightEnd: number
+    ): void {
+      let leftIndex = 0,
+        rightIndex = 0,
+        mainIndex = leftStart;
 
-                setTimeout(executeMerge, delay);
-            } else {
-                sortedArr.push(...leftArr.slice(leftIndex), ...rightArr.slice(rightIndex));
+      while (leftIndex < left.length && rightIndex < right.length) {
+        let action;
 
-                setTimeout(() => {
-                    for (let i = 0; i < sortedArr.length; i++) {
-                        this.barArray[start + i] = sortedArr[i];
-                    }
-                    totalMerges--;
-                    if (totalMerges === 0) {
-                        console.log('Sorting complete:', this.barArray);
-                    }
-                }, delay);
-            }
-        };
-
-        setTimeout(executeMerge, delay * iteration++);
-    };
-
-    const mergeSort = (arr: number[], start = 0): number[] => {
-        if (arr.length < 2) {
-            return arr;
+        if (left[leftIndex] <= right[rightIndex]) {
+          auxArray[mainIndex] = left[leftIndex];
+          action = 'left';
+          leftIndex++;
+        } else {
+          auxArray[mainIndex] = right[rightIndex];
+          action = 'right';
+          rightIndex++;
         }
 
-        const mid = Math.floor(arr.length / 2);
-        const leftArr = mergeSort(arr.slice(0, mid), start);
-        const rightArr = mergeSort(arr.slice(mid), start + mid);
+        steps.push({
+          leftElement: leftIndex < left.length ? left[leftIndex] : null,
+          rightElement: rightIndex < right.length ? right[rightIndex] : null,
+          action: action,
+          updatedIndex: mainIndex,
+          fullArray: [...auxArray],
+        });
 
-        merge(leftArr, rightArr, start);
-        return arr; // Return the original array reference
-    };
+        mainIndex++;
+      }
 
-    mergeSort([...this.barArray]);
-}
+      while (leftIndex < left.length) {
+        auxArray[mainIndex] = left[leftIndex];
 
+        steps.push({
+          leftElement: left[leftIndex],
+          rightElement: null,
+          action: 'left',
+          updatedIndex: mainIndex,
+          fullArray: [...auxArray],
+        });
 
+        leftIndex++;
+        mainIndex++;
+      }
+
+      while (rightIndex < right.length) {
+        auxArray[mainIndex] = right[rightIndex];
+
+        steps.push({
+          leftElement: null,
+          rightElement: right[rightIndex],
+          action: 'right',
+          updatedIndex: mainIndex,
+          fullArray: [...auxArray],
+        });
+
+        rightIndex++;
+        mainIndex++;
+      }
+
+      steps.push({
+        leftElement: leftIndex < left.length ? left[leftIndex] : null,
+        rightElement: rightIndex < right.length ? right[rightIndex] : null,
+        action: 'merge-complete',
+        updatedIndex: mainIndex - 1,
+        fullArray: [...auxArray],
+      });
+    }
+
+    function sort(start: number, end: number): void {
+      if (end <= start) {
+        return;
+      }
+
+      const mid: number = Math.floor((start + end) / 2);
+      sort(start, mid);
+      sort(mid + 1, end);
+
+      const left = auxArray.slice(start, mid + 1);
+      const right = auxArray.slice(mid + 1, end + 1);
+      merge(left, right, start, end);
+    }
+
+    sort(0, arr.length - 1);
+    return steps;
+  }
+
+  mergeSortHandler() {
+    const sortSteps = this.mergeSortVisualized(this.barArray);
+    console.log(sortSteps);
+    this.visualizeSort(sortSteps);
+  }
 }
