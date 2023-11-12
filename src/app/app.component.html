@@ -1,4 +1,4 @@
-<div class="w-[100vw] h-[100vh] bg-baseGray">
+<div class="w-[100vw] bg-baseGray">
   <div
     class="flex pl-10 pr-10 w-full h-16 items-center fixed z-50 bg-darkestBaseGray"
   >
@@ -6,16 +6,50 @@
   </div>
   <div class="w-full h-full pt-32 pl-10 pr-10">
     <div class="xl:col-span-2 sm:col-span-6 p-2">
+      <h1 class="text-xl text-white mb-4 font-semibold">Sort an array</h1>
+      <div>
+        <h2 class="text-md text-white">Instructions:</h2>
+        <p class="text-white w-[80%]">
+          Hit reset array to generate a random array of values 100, then hit
+          merge sort to sort through that array
+        </p>
+        <h2 class="text-md text-white mt-4">Explanation:</h2>
+        <p class="text-white w-[80%]">
+          <strong>Merge Sort:</strong> Merge sort is a divide-and-conquer
+          algorithm that splits an array into smaller subarrays, sorts each of
+          them recursively, and then merges them back into a single sorted
+          array. It divides the array in half repeatedly until each piece is
+          small enough (usually one element), at which point these pieces are
+          inherently sorted. The sorted subarrays are then merged back together
+          in a way that results in a fully sorted array, making merge sort
+          particularly efficient for large datasets.
+        </p>
+      </div>
+      <div class="flex mt-4">
+        <sortingVisualizer></sortingVisualizer>
+      </div>
+    </div>
+    <div class="xl:col-span-2 sm:col-span-6 p-2">
       <h1 class="text-xl text-white mb-4 font-semibold">Search a Maze</h1>
       <div>
         <h2 class="text-md text-white">Instructions:</h2>
         <p class="text-white w-[80%]">
-          How do to blah blah adsf sdf. Create a maze, with two entrance points
-          for start and finish and the algorithm will find the path. Run start
-          to start the process.
+          Click the buttons to the left and see how the maze is explored and how
+          the maze finds the shortest path
         </p>
         <h2 class="text-md text-white mt-4">Explanation:</h2>
-        <p class="text-white w-[80%]">The algorithm first does a search.</p>
+        <p class="text-white w-[80%]">
+          Breadth-first search (BFS) is an algorithm that explores a graph or
+          tree layer by layer, starting from a selected node and traversing all
+          its neighbors before moving to the next level of nodes. It uses a
+          queue to keep track of nodes to visit next, ensuring that nodes are
+          explored in the order they are discovered. Depth-first search (DFS),
+          on the other hand, explores as far as possible along each branch
+          before backtracking, diving deep into a graph or tree by following
+          each path to its end before moving on to the next path. DFS typically
+          uses a stack, either explicitly or through recursion, to keep track of
+          the nodes to be explored.
+        </p>
       </div>
       <div class="flex mt-4">
         <mazeBox
@@ -53,6 +87,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-span-1"></div>
     <div class="col-span-2 p-2">
       <h1 class="text-xl text-white mb-4 font-semibold">Binary Search Tree</h1>

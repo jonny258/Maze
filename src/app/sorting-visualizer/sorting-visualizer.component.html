@@ -1,0 +1,27 @@
+<button
+  (click)="resetArrayHandler()"
+  class="p-1 bg-green-800 font-semibold rounded-lg w-24 hover:scale-95"
+>
+  Reset Array
+</button>
+<button
+  (click)="mergeSortHandler()"
+  class="p-1 bg-green-800 font-semibold rounded-lg w-24 hover:scale-95"
+>
+  Merge Sort
+</button>
+<div class="flex items-end p-5">
+  <div
+    *ngFor="let bar of barArray"
+    class="bg-gray-white barStyles {{barColorClass[bar-1]}}"
+    
+    [style.height.px]="bar * 6"
+  ></div>
+</div>
+
+<!-- [ngClass]="{
+        'bg-white' : bar !== activeLeft && bar !== activeRight && bar !== activeIndex,
+        'bg-green-500' : bar === activeLeft,
+        'bg-blue-500' : bar === activeRight,
+        'bg-yellow-500' : bar === activeIndex
+    }" -->
