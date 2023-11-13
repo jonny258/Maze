@@ -28,10 +28,9 @@ export class SortingVisualizerComponent {
   activeIndex: number | null = null;
   barColorClass: string[] = Array(100).fill('bg-white');
 
-
   //I NEED TO FIGURE OUT HOW TO ANIMATE THIS WELL
   visualizeSort(stepArray: any) {
-    this.barColorClass = Array(100).fill('bg-white')
+    this.barColorClass = Array(100).fill('bg-white');
     stepArray.forEach((step: any, index: number) => {
       setTimeout(() => {
         // this.barColorClass = Array(20).fill('bg-white')
@@ -184,5 +183,106 @@ export class SortingVisualizerComponent {
     const sortSteps = this.mergeSortVisualized(this.barArray);
     console.log(sortSteps);
     this.visualizeSort(sortSteps);
+  }
+
+  binaryInsertionSortVisualized(barArray: number[]) {
+    function binarySearch(
+      arr: number[],
+      item: number,
+      start: number,
+      end: number
+    ) {
+      if (start >= end) {
+        if (arr[start] > item) return start;
+        else return start + 1;
+      }
+
+      let mid = Math.floor((start + end) / 2);
+
+      if (item < arr[mid]) {
+        return binarySearch(arr, item, start, mid);
+      } else {
+        return binarySearch(arr, item, mid + 1, end);
+      }
+    }
+
+    const steps: any[] = [];
+    let arr = [...barArray];
+    for (let i = 1; i < arr.length; i++) {
+      let current = arr[i];
+
+      let postition = binarySearch(arr, current, 0, i - 1);
+
+      for (let j = i - 1; j >= postition; j--) {
+        arr[j + 1] = arr[j];
+      }
+      arr[postition] = current;
+
+      steps.push({
+        action: null,
+        segment: null,
+        fullArray: [...arr],
+        divideIndex: null,
+      });
+    }
+    return steps;
+  }
+
+  binaryInsertionSortHandler() {
+    const sortSteps = this.binaryInsertionSortVisualized(this.barArray);
+    console.log(sortSteps);
+    this.visualizeSort(sortSteps);
+  }
+
+  //THIS DOESN'T WORK AT THE MOMENT
+  quickSortVisualized(barArray: number[]) {
+    const quickSort = (
+      arr: number[],
+      pivot: number,
+      pointerA: number,
+      pointerB: number
+    ) => {
+      if(pointerA + 2 === pointerB){
+        return
+      }
+      while (pointerA <= pointerB) {
+        let swapA = null,
+          swapB = null;
+        if (arr[pointerA] > pivot && !swapA) {
+          swapA = arr[pointerA];
+        }else{
+          pointerA++
+        }
+        if (arr[pointerB] < pivot && !swapB) {
+          swapB = arr[pointerB];
+        }else{
+          pointerB--
+        }
+
+        if (swapA && swapB) {
+          arr[pointerA] = swapB;
+          arr[pointerB] = swapA;
+
+          swapA = null;
+          swapB = null;
+          pointerA++;
+          pointerB--;
+        }
+      }
+      const moveValue = arr.splice(arr.indexOf(pivot), 1)
+      arr.splice(pivot-1, 0, ...moveValue)
+      quickSort([...arr], arr[0], 0, pointerB)
+      quickSort([...arr], arr[pivot +1], pivot, arr.length-1)
+      return arr
+      
+    };
+
+    return quickSort([...barArray], barArray[0], 0, barArray.length-1)
+  }
+
+  quickSortHandler() {
+    const sortSteps = this.quickSortVisualized(this.barArray);
+    console.log(sortSteps);
+    // this.barArray = sortSteps
   }
 }
