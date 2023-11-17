@@ -22,6 +22,18 @@
 >
   Quick Sort
 </button>
+<button
+  (click)="cocktailShakerSortHandler()"
+  class="p-1 bg-green-800 font-semibold rounded-lg w-24 hover:scale-95"
+>
+  Cocktail Shaker Sort
+</button>
+<button
+  (click)="LSDRadixSortHandler()"
+  class="p-1 bg-green-800 font-semibold rounded-lg w-24 hover:scale-95"
+>
+  LSD Radix Sort
+</button>
 <div class="flex items-end p-5">
   <div
     *ngFor="let bar of barArray"

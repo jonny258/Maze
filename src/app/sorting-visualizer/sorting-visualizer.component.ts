@@ -29,35 +29,35 @@ export class SortingVisualizerComponent {
   barColorClass: string[] = Array(100).fill('bg-white');
 
   //I NEED TO FIGURE OUT HOW TO ANIMATE THIS WELL
-  visualizeSort(stepArray: any) {
+  visualizeSort(stepArray: any, interval: number) {
     this.barColorClass = Array(100).fill('bg-white');
     stepArray.forEach((step: any, index: number) => {
       setTimeout(() => {
         // this.barColorClass = Array(20).fill('bg-white')
-        switch (step.action) {
-          case 'left': {
-            // this.barColorClass[index] = 'bg-green-500';
-            break;
-          }
-          case 'right': {
-            // this.barColorClass[index] = 'bg-blue-500';
-            break;
-          }
-          case 'merge-complete': {
-            console.log('merge-complete');
-            break;
-          }
-          case 'divide': {
-            console.log('divide');
-            break;
-          }
-          case 'before-merge': {
-            console.log('before-merge');
-            break;
-          }
-        }
+        // switch (step.action) {
+        //   case 'left': {
+        //     // this.barColorClass[index] = 'bg-green-500';
+        //     break;
+        //   }
+        //   case 'right': {
+        //     // this.barColorClass[index] = 'bg-blue-500';
+        //     break;
+        //   }
+        //   case 'merge-complete': {
+        //     console.log('merge-complete');
+        //     break;
+        //   }
+        //   case 'divide': {
+        //     console.log('divide');
+        //     break;
+        //   }
+        //   case 'before-merge': {
+        //     console.log('before-merge');
+        //     break;
+        //   }
+        // }
         this.barArray = step.fullArray;
-      }, 20 * index);
+      }, interval * index);
     });
   }
 
@@ -182,7 +182,7 @@ export class SortingVisualizerComponent {
   mergeSortHandler() {
     const sortSteps = this.mergeSortVisualized(this.barArray);
     console.log(sortSteps);
-    this.visualizeSort(sortSteps);
+    this.visualizeSort(sortSteps, 10);
   }
 
   binaryInsertionSortVisualized(barArray: number[]) {
@@ -231,58 +231,167 @@ export class SortingVisualizerComponent {
   binaryInsertionSortHandler() {
     const sortSteps = this.binaryInsertionSortVisualized(this.barArray);
     console.log(sortSteps);
-    this.visualizeSort(sortSteps);
+    this.visualizeSort(sortSteps, 50);
   }
 
   //THIS DOESN'T WORK AT THE MOMENT
   quickSortVisualized(barArray: number[]) {
-    const quickSort = (
-      arr: number[],
-      pivot: number,
-      pointerA: number,
-      pointerB: number
-    ) => {
-      if(pointerA + 2 === pointerB){
-        return
+    let sortSteps: any = [];
+    const quickSort = (arr: number[], left: number, right: number) => {
+      if (left >= right) {
+        return;
       }
-      while (pointerA <= pointerB) {
-        let swapA = null,
-          swapB = null;
-        if (arr[pointerA] > pivot && !swapA) {
-          swapA = arr[pointerA];
-        }else{
-          pointerA++
-        }
-        if (arr[pointerB] < pivot && !swapB) {
-          swapB = arr[pointerB];
-        }else{
-          pointerB--
-        }
 
-        if (swapA && swapB) {
-          arr[pointerA] = swapB;
-          arr[pointerB] = swapA;
-
-          swapA = null;
-          swapB = null;
-          pointerA++;
-          pointerB--;
+      const partition = (
+        arr: number[],
+        left: number,
+        right: number,
+        pivot: number
+      ) => {
+        while (left <= right) {
+          while (arr[left] < pivot) {
+            left++;
+          }
+          while (arr[right] > pivot) {
+            right--;
+          }
+          if (left <= right) {
+            [arr[left], arr[right]] = [arr[right], arr[left]];
+            left++;
+            right--;
+            sortSteps.push({
+              action: null,
+              segment: null,
+              fullArray: [...arr],
+              divideIndex: null,
+            });
+          }
         }
-      }
-      const moveValue = arr.splice(arr.indexOf(pivot), 1)
-      arr.splice(pivot-1, 0, ...moveValue)
-      quickSort([...arr], arr[0], 0, pointerB)
-      quickSort([...arr], arr[pivot +1], pivot, arr.length-1)
-      return arr
-      
+        return left;
+      };
+
+      let pivot = arr[Math.floor((left + right) / 2)];
+      let index = partition(arr, left, right, pivot);
+      quickSort(arr, left, index - 1);
+      quickSort(arr, index, right);
     };
 
-    return quickSort([...barArray], barArray[0], 0, barArray.length-1)
+    quickSort(barArray, 0, barArray.length - 1);
+    return sortSteps;
   }
 
   quickSortHandler() {
     const sortSteps = this.quickSortVisualized(this.barArray);
     console.log(sortSteps);
-    // this.barArray = sortSteps
+    this.visualizeSort(sortSteps, 50);
+  }
+
+  cocktailShakerSortVisualized(barArray: number[]) {
+    let arr = [...barArray];
+    let sortSteps: any = [];
+    let noSwaps = false;
+    while (!noSwaps) {
+      let leftMost = 0;
+      let rightMost = arr.length - 1;
+      noSwaps = true;
+      for (let i = leftMost; i < rightMost - 1; i++) {
+        if (arr[i] > arr[i + 1]) {
+          [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+          noSwaps = false;
+          //rightMost--
+          sortSteps.push({
+            action: null,
+            segment: null,
+            fullArray: [...arr],
+            divideIndex: null,
+          });
+        }
+      }
+
+      for (let i = rightMost; i > leftMost + 1; i--) {
+        if (arr[i] < arr[i - 1]) {
+          [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+          noSwaps = false;
+          //leftMost++
+          sortSteps.push({
+            action: null,
+            segment: null,
+            fullArray: [...arr],
+            divideIndex: null,
+          });
+        }
+      }
+    }
+    return sortSteps;
+  }
+
+  cocktailShakerSortHandler() {
+    const sortSteps = this.cocktailShakerSortVisualized(this.barArray);
+    console.log(sortSteps);
+    this.visualizeSort(sortSteps, 5);
+  }
+
+  LSDRadixSortVisualized(barArray: number[]): any[] {
+    let arr = [...barArray];
+    const sortSteps: any[] = [];
+    if (arr.length === 0) return sortSteps;
+  
+    const getMaxDigits = (nums: number[]): number => {
+      let maxDigits = 0;
+      for (let num of nums) {
+        maxDigits = Math.max(maxDigits, num.toString().length);
+      }
+      return maxDigits;
+    };
+  
+    const getDigit = (num: number, pos: number): number => {
+      return Math.floor(Math.abs(num) / Math.pow(10, pos)) % 10;
+    };
+  
+    let maxDigits = getMaxDigits(arr);
+  
+    for (let k = 0; k < maxDigits; k++) {
+      let buckets: number[][] = Array.from({ length: 10 }, () => []);
+      let tempArray: number[] = [...arr]; // Initialize with the current array state
+  
+      let count = 0; // To keep track of filled elements in tempArray
+      for (let i = 0; i < arr.length; i++) {
+        let digit = getDigit(arr[i], k);
+        buckets[digit].push(arr[i]);
+  
+        // Update tempArray with the current state of buckets
+        count = 0; // Reset count for each bucket update
+        for (let j = 0; j < buckets.length; j++) {
+          for (let num of buckets[j]) {
+            tempArray[count++] = num;
+          }
+        }
+  
+        sortSteps.push({
+          action: null,
+          segment: null,
+          fullArray: [...tempArray],
+          divideIndex: null,
+        });
+      }
+      
+      arr = buckets.flat(); // Flatten the buckets for the next pass
+      // Capture state after reconstructing the array from buckets
+      sortSteps.push({
+        action: null,
+        segment: null,
+        fullArray: [...arr],
+        divideIndex: null,
+      });
+    }
+  
+    return sortSteps;
+  }
+  
+
+  LSDRadixSortHandler() {
+    const sortSteps = this.LSDRadixSortVisualized(this.barArray);
+    console.log(sortSteps);
+    this.visualizeSort(sortSteps, 20);
   }
 }
