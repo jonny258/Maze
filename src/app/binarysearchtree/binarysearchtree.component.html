@@ -1,0 +1,78 @@
+<div class="h-[480px] w-[580px] bg-slate-800">
+  <div class="w-full h-[100px]  flex items-center justify-center">
+    <div class="flex items-center justify-center">
+      <div
+        class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20"
+        [ngClass]="{'bg-green-500': rootNode.isActive, 'bg-zinc-600': !rootNode.isActive}"
+      >
+        <h1 class="text-4xl font-semibold" id="row1Column1Num">20</h1>
+      </div>
+    </div>
+  </div>
+  <div class="w-full h-[100px]  flex items-center justify-around">
+    <div class="flex items-center justify-center">
+      <div
+        class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20" id="row1Column1Node"
+        [ngClass]="{'bg-green-500': leftNode.isActive, 'bg-zinc-600': !leftNode.isActive}"
+      >
+        <h1 class="text-4xl font-semibold" id="row1Column1Num">10</h1>
+      </div>
+      <div class="h-36 w-[3px] ml-32 mb-24 bg-black fixed rotate-[54deg]"></div>
+    </div>
+    <div class="flex items-center justify-center">
+      <div
+        class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20"
+        [ngClass]="{'bg-green-500': rightNode.isActive, 'bg-zinc-600': !rightNode.isActive}"
+      >
+        <h1 class="text-4xl font-semibold" id="row1Column1Num">30</h1>
+      </div>
+      <div class="h-36 w-[3px] mr-32 mb-24 bg-black fixed rotate-[-54deg]"></div>
+    </div>
+  </div>
+  <div class="w-full h-[100px]  flex items-center justify-around">
+    <div class="flex items-center justify-center">
+        <div
+          class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20"
+          [ngClass]="{'bg-green-500': leftChildOfLeftNode.isActive, 'bg-zinc-600': !leftChildOfLeftNode.isActive}"
+        >
+          <h1 class="text-4xl font-semibold" id="row1Column1Num">5</h1>
+        </div>
+        <div class="h-36 w-[3px] ml-20 mb-24 bg-black fixed rotate-[35deg]"></div>
+      </div>
+      <div class="flex items-center justify-center">
+        <div
+          class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20"
+          [ngClass]="{'bg-green-500': rightChildOfLeftNode.isActive, 'bg-zinc-600': !rightChildOfLeftNode.isActive}"
+        >
+          <h1 class="text-4xl font-semibold" id="row1Column1Num">15</h1>
+        </div>
+        <div class="h-36 w-[3px] mr-20 mb-24 bg-black fixed rotate-[-35deg]"></div>
+      </div>
+      <div class="flex items-center justify-center">
+        <div
+          class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20"
+          [ngClass]="{'bg-green-500': leftChildOfRightNode.isActive, 'bg-zinc-600': !leftChildOfRightNode.isActive}"
+        >
+          <h1 class="text-4xl font-semibold" id="row1Column1Num">25</h1>
+        </div>
+        <div class="h-36 w-[3px] ml-20 mb-24 bg-black fixed rotate-[35deg]"></div>
+      </div>
+      <div class="flex items-center justify-center">
+        <div
+          class="h-[60px] w-[60px] rounded-full flex items-center justify-center z-20"
+          [ngClass]="{'bg-green-500': rightChildOfRightNode.isActive, 'bg-zinc-600': !rightChildOfRightNode.isActive}"
+        >
+          <h1 class="text-4xl font-semibold" id="row1Column1Num">35</h1>
+        </div>
+        <div class="h-36 w-[3px] mr-20 mb-24 bg-black fixed rotate-[-35deg]"></div>
+      </div>
+  </div>
+  <input type="text" (keyup)="getInput($event)" />
+  <h1 class="text-white">
+    Type in number, check console.log
+  </h1>
+  <!-- <input type="text" (keyup)="addNumber($event)"> -->
+  <!-- <button (click)="addNumberFunction()">
+    Find Number
+  </button> -->
+</div>
