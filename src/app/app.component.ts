@@ -165,6 +165,11 @@ export class AppComponent {
     this.clearTimeouts();
   }
 
+  
+  isHidden = true;
+  hideBinarySearch() {
+    this.isHidden = !this.isHidden;
+  }
 
 
 }

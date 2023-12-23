@@ -89,8 +89,16 @@
     </div>
 
     <div class="col-span-1"></div>
-    <div class="col-span-2 p-2">
-      <h1 class="text-xl text-white mb-4 font-semibold">Binary Search Tree</h1>
+    <h1
+    class="text-xl text-white mb-4 font-semibold px-3 py-3 rounded bg-green-600"
+    [ngClass]="{'w-auto': isHidden, 'bg-green-600': isHidden}"
+    (click)="hideBinarySearch()">
+    Binary Search Tree <span *ngIf="isHidden" class="text-sm ml-5">Click to view</span>
+  </h1>
+  
+  
+
+    <div *ngIf="!isHidden">
       <div>
         <h2 class="text-md text-white">The plan</h2>
         <p class="text-white w-[80%]">
