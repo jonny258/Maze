@@ -1,6 +1,10 @@
 # Algorithm Visualizer
 
 This project is an interactive web-based visualization tool for various algorithms including search algorithms like DFS (Depth-First Search) and BFS (Breadth-First Search), as well as sorting algorithms like Merge Sort, Binary Insertion Sort, Quick Sort, Cocktail Shaker Sort, and LSD Radix Sort.
+## Pictures
+![DFS maze](https://drive.google.com/uc?export=view&id=1e-zNLtSQIxcc3Sf8lHpYlNq3obbYZryq)
+![Alt text](https://drive.google.com/uc?export=view&id=15Yf-yitpky5B3yjNPMZPsJJ2pmZYN-0d)
+![Alt text](https://drive.google.com/uc?export=view&id=1GfnJRpW4ks3VQW_qValm17J2rxfLcc8k)
 
 ## Development server
 
@@ -48,15 +52,15 @@ ng serve
 Navigate to http://localhost:4200/ to view the application.
 ```
 
-# Contributing
+## Contributing
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
 Don't forget to give the project a star! Thanks again!
 
-# License
+## License
 Distributed under the MIT License. See LICENSE for more information.
 
-# Deployment
+## Deployment
 Deployed site: [Site](https://jonny258.github.io/Algo-deploy/)
