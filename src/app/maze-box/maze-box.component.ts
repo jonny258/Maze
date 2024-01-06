@@ -7,20 +7,17 @@ import { Graph, ListNode } from '../graphClass';
   styleUrls: ['./maze-box.component.css'],
 })
 export class MazeBoxComponent implements OnInit {
-
   @Output() mazeGraphChange = new EventEmitter<{
     perimeter: ListNode[];
     maze: Graph;
   }>();
+  @Output() modeChange = new EventEmitter<{ drawMode: boolean, eraseMode: boolean }>();
   @Input() shortestPath?: ListNode[];
   @Input() explorePath?: ListNode[];
+  @Input() drawMode?: boolean;
+  @Input() eraseMode?: boolean;
   @Input() currentNode?: ListNode;
-
-
-
-
-
-
+  @Input() clearAll?: () => void;
 
   //SET STYLES
   isNodeInShortestPath(node: ListNode): boolean {
@@ -74,7 +71,7 @@ export class MazeBoxComponent implements OnInit {
 
   perimeterArray: ListNode[] = [];
 
-  setUpMaze(){
+  setUpMaze() {
     for (let i = 0; i < 400; i++) {
       this.mazeGraph.addNode(i);
     }
@@ -96,38 +93,40 @@ export class MazeBoxComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setUpMaze()   
+    this.setUpMaze();
   }
 
-
-  drawMode = false;
-  eraseMode = false;
   drawHandler() {
     this.eraseMode = false;
     this.drawMode = true;
+    this.modeChange.emit({ drawMode: this.drawMode, eraseMode: this.eraseMode });
   }
 
   eraseHandler() {
     this.drawMode = false;
     this.eraseMode = true;
+    this.modeChange.emit({ drawMode: this.drawMode, eraseMode: this.eraseMode });
   }
 
   resetHandler() {
+    this.clearAll?.();
     this.drawMode = false;
     this.eraseMode = false;
-    this.mazeGraph = new Graph;
-    this.setUpMaze()  
+    this.mazeGraph = new Graph();
+    this.setUpMaze();
   }
 
-  hoverHandler(node: ListNode){
-    console.log(node)
-    console.log(this.drawMode)
-    if(this.drawMode){
-      node.isWall = true
+  hoverHandler(node: ListNode) {
+    console.log(node);
+    console.log(this.drawMode);
+    if (this.drawMode) {
+      this.clearAll?.();
+      node.isWall = true;
       this.removeAllNodeNeighbors(node);
     }
-    if(this.eraseMode){
-      node.isWall = false
+    if (this.eraseMode) {
+      this.clearAll?.();
+      node.isWall = false;
       this.addAllNodeNeighbors(node);
       node.neighbors.forEach((nodeNeighbor) => {
         nodeNeighbor.addNeighbor(node);
@@ -136,9 +135,7 @@ export class MazeBoxComponent implements OnInit {
   }
 
   nodeClickHandler(node: ListNode) {
-    this.shortestPath = [];
-    this.currentNode = new ListNode(-1)
-    this.explorePath = [];
+    this.clearAll?.();
     this.drawMode = false;
     this.eraseMode = false;
     console.log(this.shortestPath);

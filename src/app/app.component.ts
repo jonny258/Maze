@@ -10,6 +10,8 @@ export class AppComponent {
   title = 'maze';
   perimeterArray: ListNode[] = [];
   mazeGraph: Graph = new Graph();
+  drawMode: boolean = false;
+  eraseMode: boolean = false;
   private timeoutIds: number[] = [];
 
   constructor(private ngZone: NgZone, private cdRef: ChangeDetectorRef) {}
@@ -26,9 +28,9 @@ export class AppComponent {
       if (!this.perimeterArray[i].isWall) {
         if (
           this.perimeterArray[i].value !== 0 &&
-          this.perimeterArray[i].value !== 11 &&
-          this.perimeterArray[i].value !== 132 &&
-          this.perimeterArray[i].value !== 143
+          this.perimeterArray[i].value !== 19 &&
+          this.perimeterArray[i].value !== 380 &&
+          this.perimeterArray[i].value !== 399
         ) {
           notWallOrCornerArray.push(this.perimeterArray[i]);
         }
@@ -42,7 +44,10 @@ export class AppComponent {
   explorePath: ListNode[] = [];
   currentNode: ListNode = new ListNode(-1);
 
+
   solveGraphDFS() {
+    this.drawMode = false;
+    this.eraseMode = false;
     this.clearAll();
     let parimerterHoles = this.findParimeterHoles();
     if (parimerterHoles.length > 0) {
@@ -71,6 +76,8 @@ export class AppComponent {
   }
 
   solveGraphBFS() {
+    this.drawMode = false;
+    this.eraseMode = false;
     this.clearAll();
     let parimerterHoles = this.findParimeterHoles();
     if (parimerterHoles.length > 0) {
@@ -100,6 +107,8 @@ export class AppComponent {
   }
 
   shortestPathBFS() {
+    this.drawMode = false;
+    this.eraseMode = false;
     this.clearAll();
     let parimerterHoles = this.findParimeterHoles();
     if (parimerterHoles.length === 2) {
@@ -158,11 +167,16 @@ export class AppComponent {
     this.timeoutIds = []; // Reset the timeout IDs array
   }
 
-  clearAll() {
+  clearAll = () => {
     this.shortestPath = [];
     this.explorePath = [];
     this.currentNode = new ListNode(-1);
     this.clearTimeouts();
+  };
+  
+  handleModeChange(modes: { drawMode: boolean, eraseMode: boolean }) {
+    this.drawMode = modes.drawMode;
+    this.eraseMode = modes.eraseMode;
   }
 
   

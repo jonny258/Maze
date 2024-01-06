@@ -57,6 +57,10 @@
           [shortestPath]="shortestPath"
           [explorePath]="explorePath"
           [currentNode]="currentNode"
+          [clearAll]="clearAll"
+          [drawMode]="drawMode"
+          [eraseMode]="eraseMode"
+          (modeChange)="handleModeChange($event)"
         ></mazeBox>
         <div class="h-[280px] pl-4 flex flex-col justify-between">
           <div></div>
