@@ -1,29 +1,78 @@
-<div class="flex flex-wrap gap-2 justify-center">
-  <button (click)="resetArrayHandler()" class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2">
-    Reset Array
-  </button>
-  <button (click)="mergeSortHandler()" class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2">
-    Merge Sort
-  </button>
-  <button (click)="binaryInsertionSortHandler()" class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2">
-    Binary Insertion Sort
-  </button>
-  <button (click)="quickSortHandler()" class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2">
-    Quick Sort
-  </button>
-  <button (click)="cocktailShakerSortHandler()" class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2">
-    Cocktail Shaker Sort
-  </button>
-  <button (click)="LSDRadixSortHandler()" class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2">
-    LSD Radix Sort
-  </button>
-</div>
+<div class="flex">
+  <div>
+    <div class="flex flex-wrap gap-2 justify-center">
+      <button
+        (click)="mergeSortHandler()"
+        class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+      >
+        Merge Sort
+      </button>
+      <button
+        (click)="binaryInsertionSortHandler()"
+        class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+      >
+        Binary Insertion Sort
+      </button>
+      <button
+        (click)="quickSortHandler()"
+        class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+      >
+        Quick Sort
+      </button>
+      <button
+        (click)="cocktailShakerSortHandler()"
+        class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+      >
+        Cocktail Shaker Sort
+      </button>
+      <button
+        (click)="LSDRadixSortHandler()"
+        class="btn p-1 bg-green-600 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+      >
+        LSD Radix Sort
+      </button>
+    </div>
 
-
-<div class="flex items-end p-5">
-  <div
-    *ngFor="let bar of barArray"
-    class="bg-gray-white barStyles {{ barColorClass[bar - 1] }}"
-    [style.height.px]="bar * 6"
-  ></div>
+    <div>
+      <div class="flex items-end p-5">
+        <div
+          *ngFor="let bar of barArray"
+          class="bg-gray-white barStyles {{ barColorClass[bar - 1] }}"
+          [style.height.px]="bar * 6"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center justify-center"> <!-- Darker background for the whole screen -->
+    <div class="bg-gray-700 p-6 rounded-lg shadow-lg"> <!-- Box around the component with padding, rounded corners, and shadow -->
+      
+      <div class="flex items-center justify-center mb-4"> <!-- Center buttons -->
+        <button
+          (click)="startStopSort()"
+          [ngClass]="isSorting ? 'bg-red-600' : 'bg-green-600'"
+          class="btn h-16 p-1 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+        >
+          {{ isSorting ? "Stop Sort" : "Resume Sort" }}
+        </button>
+        <button
+          (click)="resetArrayHandler()"
+          class="btn h-16 p-1 bg-yellow-500 font-semibold rounded-lg w-24 hover:scale-95 mx-2"
+        >
+          Reset Array
+        </button>
+      </div>
+  
+      <div class="flex items-center justify-center space-x-2"> <!-- Center slider and label -->
+        <input
+          type="range"
+          min="0"
+          max="50"
+          class="slider w-64 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-900"
+          (input)="setSpeed($event)"
+        />
+        <span class="w-5">{{ intervalLength }}</span>
+      </div>
+  
+    </div>
+  </div>
 </div>

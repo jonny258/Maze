@@ -20,6 +20,7 @@ export class SortingVisualizerComponent {
     }
   }
 
+  // sortIntervalId: any;
   barArray = Array.from({ length: 100 }, (_, i) => i + 1);
 
   ngOnInit() {
@@ -27,6 +28,7 @@ export class SortingVisualizerComponent {
   }
 
   resetArrayHandler() {
+    this.isSorting = false;
     this.shuffleArray(this.barArray);
   }
 
@@ -34,67 +36,105 @@ export class SortingVisualizerComponent {
   activeLeft: number | null = null;
   activeIndex: number | null = null;
   barColorClass: string[] = Array(100).fill('bg-white');
+  isSorting: boolean = false;
+  currentIndex: number = 0;
+  stepArray: any[] = []; // Add this line
+  intervalLength: number = 50;
 
-  //I NEED TO FIGURE OUT HOW TO ANIMATE THIS WELL WITH COLORS??
   visualizeSort(stepArray: any, interval: number) {
+    this.isSorting = true;
+    this.stepArray = stepArray; // Store the stepArray
     this.barColorClass = Array(100).fill('bg-white');
-    stepArray.forEach((step: any, index: number) => {
-      setTimeout(() => {
-        // this.barColorClass = Array(20).fill('bg-white')
-        // switch (step.action) {
-        //   case 'left': {
-        //     // this.barColorClass[index] = 'bg-green-500';
-        //     break;
-        //   }
-        //   case 'right': {
-        //     // this.barColorClass[index] = 'bg-blue-500';
-        //     break;
-        //   }
-        //   case 'merge-complete': {
-        //     console.log('merge-complete');
-        //     break;
-        //   }
-        //   case 'divide': {
-        //     console.log('divide');
-        //     break;
-        //   }
-        //   case 'before-merge': {
-        //     console.log('before-merge');
-        //     break;
-        //   }
-        // }
+
+    const executeStep = () => {
+      if (this.currentIndex < stepArray.length && this.isSorting) {
+        const step = stepArray[this.currentIndex];
+
+        // Update barArray for the current step
         this.barArray = step.fullArray;
-      }, interval * index);
-    });
+
+        // Reset barColorClass for the current visualization
+        this.barColorClass = Array(100).fill('bg-white');
+
+        this.currentIndex++;
+        if (this.currentIndex < stepArray.length) {
+          setTimeout(executeStep, interval);
+        }
+      }
+    };
+
+    executeStep();
+  }
+
+  startStopSort() {
+    if (this.isSorting) {
+      this.isSorting = false;
+    } else {
+      if (this.currentIndex < this.stepArray.length) {
+        this.isSorting = true;
+        this.visualizeSort(this.stepArray, this.intervalLength);
+      }
+    }
+  }
+  // stopSort() {
+  //   this.isSorting = false;
+  // }
+
+  // resumeSort() {
+  //   if (this.currentIndex < this.stepArray.length) {
+  //     this.isSorting = true;
+  //     this.visualizeSort(this.stepArray, this.intervalLength);
+  //   }
+  // }
+  setSpeed(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.intervalLength = Number(inputElement.value);
+  }
+
+  resetSortVariables() {
+    this.currentIndex = 0;
+    this.isSorting = false;
   }
 
   mergeSortHandler() {
-    const sortSteps = mergeSortVisualized(this.barArray);
-    console.log(sortSteps);
-    this.visualizeSort(sortSteps, 10);
+    if (this.isSorting) {
+      this.isSorting = false;
+    } else {
+      const sortSteps = mergeSortVisualized(this.barArray);
+      console.log(sortSteps);
+      this.resetSortVariables();
+      this.visualizeSort(sortSteps, this.intervalLength);
+    }
   }
 
   binaryInsertionSortHandler() {
     const sortSteps = binaryInsertionSortVisualized(this.barArray);
     console.log(sortSteps);
-    this.visualizeSort(sortSteps, 50);
+    this.resetSortVariables();
+    this.visualizeSort(sortSteps, this.intervalLength);
   }
-
   quickSortHandler() {
-    const sortSteps = quickSortVisualized(this.barArray);
-    console.log(sortSteps);
-    this.visualizeSort(sortSteps, 50);
+    if (this.isSorting) {
+      this.isSorting = false;
+    } else {
+      const sortSteps = quickSortVisualized(this.barArray);
+      console.log(sortSteps);
+      this.resetSortVariables();
+      this.visualizeSort(sortSteps, this.intervalLength);
+    }
   }
 
   cocktailShakerSortHandler() {
     const sortSteps = cocktailShakerSortVisualized(this.barArray);
     console.log(sortSteps);
-    this.visualizeSort(sortSteps, 5);
+    this.resetSortVariables();
+    this.visualizeSort(sortSteps, this.intervalLength);
   }
 
   LSDRadixSortHandler() {
     const sortSteps = LSDRadixSortVisualized(this.barArray);
     console.log(sortSteps);
-    this.visualizeSort(sortSteps, 20);
+    this.resetSortVariables();
+    this.visualizeSort(sortSteps, this.intervalLength);
   }
 }
